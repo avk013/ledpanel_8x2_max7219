@@ -12,14 +12,14 @@ int f=1,d=9,shag=0;
 Max72xxPanel matrix = Max72xxPanel(pinCS, numberOfHorizontalDisplays, numberOfVerticalDisplays);
 
 String tape = "0123456789";
-int wait = 250; // In milliseconds
+int wait = 450; // In milliseconds
 
 int spacer = 1;
 int width = 5 + spacer; // The font width is 5 pixels
 
 void setup() {
   matrix.shutdown(true);
-     delay(300);
+     delay(600);
   matrix.shutdown(false); 
  Serial.begin(9600);      // открываем последовательное соединение
 Wire.begin();
@@ -58,41 +58,15 @@ matrix.setRotation(1);
 }
 
 void loop() {
-  matrix.shutdown(true);
+ matrix.shutdown(true);
   delay(14);
-  matrix.shutdown(false);
-  delay(14);
+ matrix.shutdown(false);
+  //delay(14);
   matrix.setIntensity(0); // Use a value between 0 and 15 for brightness
   matrix.fillScreen(LOW);
-  delay(wait);
-   matrix.setIntensity(0);
+  //delay(wait);
    DateTime now = rtc.now(); //get the current date-time
     uint32_t ts = now.getEpoch();
-//int i=5;
- /*for ( int i = 0 ; i < width * tape.length() + matrix.width() - 1 - spacer; i++ )
-  //  for ( int i = 0 ; i < 64; i++ )
-{
-
-    matrix.fillScreen(LOW);
-
-    int letter = i / width;
-    int x = (matrix.width() - 1) - i % width;
-    int y = (matrix.height() - 8) / 2; // center the text vertically
-
-    while ( x + width - spacer >= 0 && letter >= 0 ) {
-    if ( letter < tape.length() ) 
-      {
-        matrix.drawChar(x, y, tape[letter], HIGH, LOW, 1);
-      }
-
-      letter--;
-      x -= width;
-   }
-
-    matrix.write(); // Send bitmap to display
-
-  }
-  */
 if (shag==d) f=-1;
 if (shag==0) f=1;
 shag+=f;
@@ -103,15 +77,15 @@ shag+=f;
   int ss=11,so=0,siz=2; 
   String sec=String(now.hour(),DEC)+m+s;
  for(int i=0;i<=sec.length();i++)
-   {if(i>sec.length()-3) {siz=1;ss=7;}
+   {if(i>sec.length()-3) {siz=1;ss=6;}
     matrix.drawChar(so+shag, 0, sec[i] , HIGH, LOW, siz);
    so+=ss;
     //matrix.drawChar(13*i+shag, 0, sec[i] , HIGH, LOW, 2);
    }
      matrix.write(); // Send bitmap to display
-     delay(wait);
-     matrix.fillScreen(LOW);
-     delay(wait);
+  delay(wait);
+ //    matrix.fillScreen(LOW);
+   //  delay(wait);
   /*       Serial.println('/');
 Serial.print(now.year(), DEC);
   Serial.print('/');
