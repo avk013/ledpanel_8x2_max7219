@@ -8,11 +8,11 @@ int pinCS = 10; // Attach CS to this pin, DIN to MOSI and CLK to SCK (cf http://
 //int numberOfHorizontalDisplays = 2;
 int numberOfHorizontalDisplays = 2;
 int numberOfVerticalDisplays = 8;
-int f=1,d=9,shag=0;
+int f=1,d=9,shag=0, yshag=1,yy=0;
 Max72xxPanel matrix = Max72xxPanel(pinCS, numberOfHorizontalDisplays, numberOfVerticalDisplays);
 
 String tape = "0123456789";
-int wait = 450; // In milliseconds
+int wait = 100; // In milliseconds
 
 int spacer = 1;
 int width = 5 + spacer; // The font width is 5 pixels
@@ -24,7 +24,7 @@ void setup() {
  Serial.begin(9600);      // открываем последовательное соединение
 Wire.begin();
 rtc.begin();
-  matrix.setIntensity(0); // Use a value between 0 and 15 for brightness
+  matrix.setIntensity(2); // Use a value between 0 and 15 for brightness
 
 matrix.setPosition(0, 1, 0);
 matrix.setPosition(8, 0, 0);
@@ -58,11 +58,11 @@ matrix.setRotation(1);
 }
 
 void loop() {
- matrix.shutdown(true);
-  delay(14);
- matrix.shutdown(false);
+// matrix.shutdown(true);
+//  delay(14);
+ //matrix.shutdown(false);
   //delay(14);
-  matrix.setIntensity(0); // Use a value between 0 and 15 for brightness
+  //matrix.setIntensity(1); // Use a value between 0 and 15 for brightness
   matrix.fillScreen(LOW);
   //delay(wait);
    DateTime now = rtc.now(); //get the current date-time
@@ -78,8 +78,10 @@ shag+=f;
   String sec=String(now.hour(),DEC)+m+s;
  for(int i=0;i<=sec.length();i++)
    {if(i>sec.length()-3) {siz=1;ss=6;}
-    matrix.drawChar(so+shag, 0, sec[i] , HIGH, LOW, siz);
+    matrix.drawChar(so+shag, yy, sec[i] , HIGH, LOW, siz);
    so+=ss;
+   yy+=yshag;
+   if(yy==2)yshag=-1; else if(yy==0)yshag=1;
     //matrix.drawChar(13*i+shag, 0, sec[i] , HIGH, LOW, 2);
    }
      matrix.write(); // Send bitmap to display
