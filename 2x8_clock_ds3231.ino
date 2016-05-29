@@ -14,7 +14,7 @@ Max72xxPanel matrix = Max72xxPanel(pinCS, numberOfHorizontalDisplays, numberOfVe
 String tape = "0123456789";
 int wait = 100; // In milliseconds
 
-int spacer = 1;
+int spacer = 1, intens=2;
 int width = 5 + spacer; // The font width is 5 pixels
 
 void setup() {
@@ -24,7 +24,7 @@ void setup() {
  Serial.begin(9600);      // открываем последовательное соединение
 Wire.begin();
 rtc.begin();
-  matrix.setIntensity(2); // Use a value between 0 and 15 for brightness
+  matrix.setIntensity(intens); // Use a value between 0 and 15 for brightness
 
 matrix.setPosition(0, 1, 0);
 matrix.setPosition(8, 0, 0);
@@ -58,11 +58,12 @@ matrix.setRotation(1);
 }
 
 void loop() {
-// matrix.shutdown(true);
+  if (String(now.second(),DEC)=13)
+{ matrix.shutdown(true);
 //  delay(14);
- //matrix.shutdown(false);
+ matrix.shutdown(false);
   //delay(14);
-  //matrix.setIntensity(1); // Use a value between 0 and 15 for brightness
+  matrix.setIntensity(intens);}
   matrix.fillScreen(LOW);
   //delay(wait);
    DateTime now = rtc.now(); //get the current date-time
@@ -78,10 +79,18 @@ shag+=f;
   String sec=String(now.hour(),DEC)+m+s;
  for(int i=0;i<=sec.length();i++)
    {if(i>sec.length()-3) {siz=1;ss=6;}
+   if ($i==2) {
+     so+=2;
+     matrix.drawPixel(so, 4,1);
+     matrix.drawPixel(so, 5,1);
+     matrix.drawPixel(so, 11,1);
+     matrix.drawPixel(so, 12,1);
+     so+=1;
+   }
     matrix.drawChar(so+shag, yy, sec[i] , HIGH, LOW, siz);
    so+=ss;
-   yy+=yshag;
-   if(yy==2)yshag=-1; else if(yy==0)yshag=1;
+  // yy+=yshag;
+   //if(yy==2)yshag=-1; else if(yy==0)yshag=1;
     //matrix.drawChar(13*i+shag, 0, sec[i] , HIGH, LOW, 2);
    }
      matrix.write(); // Send bitmap to display
