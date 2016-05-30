@@ -8,7 +8,7 @@ int pinCS = 10; // Attach CS to this pin, DIN to MOSI and CLK to SCK (cf http://
 //int numberOfHorizontalDisplays = 2;
 int numberOfHorizontalDisplays = 2;
 int numberOfVerticalDisplays = 8;
-int f=1,d=9,shag=0, yshag=1,yy=0;
+int f=1,d=9,shag=0, yshag=1,yy=0,flagi=0;
 Max72xxPanel matrix = Max72xxPanel(pinCS, numberOfHorizontalDisplays, numberOfVerticalDisplays);
 
 String tape = "0123456789";
@@ -58,36 +58,46 @@ matrix.setRotation(1);
 }
 
 void loop() {
+
+  matrix.fillScreen(LOW);
+  //delay(wait);
+   DateTime now = rtc.now(); //get the current date-time
+    uint32_t ts = now.getEpoch();
   if (String(now.second(),DEC)=13)
 { matrix.shutdown(true);
 //  delay(14);
  matrix.shutdown(false);
   //delay(14);
   matrix.setIntensity(intens);}
-  matrix.fillScreen(LOW);
-  //delay(wait);
-   DateTime now = rtc.now(); //get the current date-time
-    uint32_t ts = now.getEpoch();
-if (shag==d) f=-1;
-if (shag==0) f=1;
-shag+=f;
+//if (shag==d) f=-1;
+//if (shag==0) f=1;
+//shag+=f;
   
   String s,m;
    if (String(now.second(),DEC).length()==1) s="0"+String(now.second(),DEC); else s=String(now.second(),DEC);
    if (String(now.minute(),DEC).length()==1) m="0"+String(now.minute(),DEC); else m=String(now.minute(),DEC);
   int ss=11,so=0,siz=2; 
   String sec=String(now.hour(),DEC)+m+s;
- for(int i=0;i<=sec.length();i++)
-   {if(i>sec.length()-3) {siz=1;ss=6;}
-   if ($i==2) {
-     so+=2;
-     matrix.drawPixel(so, 4,1);
-     matrix.drawPixel(so, 5,1);
-     matrix.drawPixel(so, 11,1);
-     matrix.drawPixel(so, 12,1);
+
+for(int i=0;i<=sec.length();i++)
+   {
+    
+    
+     if(i>sec.length()-3) {siz=1;ss=6;}
+   if (flagi==1) {if (i==2) {
      so+=1;
-   }
-    matrix.drawChar(so+shag, yy, sec[i] , HIGH, LOW, siz);
+     matrix.drawPixel(so, 4,1);
+     matrix.drawPixel(so+1, 4,1);
+     matrix.drawPixel(so, 5,1);
+     matrix.drawPixel(so+1, 5,1);
+     matrix.drawPixel(so, 11,1);
+     matrix.drawPixel(so+1, 11,1);
+     matrix.drawPixel(so, 10,1);
+     matrix.drawPixel(so+1, 10,1);
+     so+=3;
+   }}
+   if ((flagi!=1)&&(i==2)) so+=4;
+    matrix.drawChar(so+shag, yy+1, sec[i] , HIGH, LOW, siz);
    so+=ss;
   // yy+=yshag;
    //if(yy==2)yshag=-1; else if(yy==0)yshag=1;
@@ -111,4 +121,5 @@ Serial.print(now.year(), DEC);
   Serial.print(now.second(), DEC);
     delay(wait);
     */
+    if(flagi==1) flagi=0; else flagi=1;
 }
